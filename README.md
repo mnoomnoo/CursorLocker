@@ -8,7 +8,7 @@ will interact with the click instead of RTW. This makes Windows minimize RTW and
 like that very much. 
 
 This program fixes this by never allowing the cursor to escape the primary monitor when
-playing a specified game. Once the specified program quits then the cursor is unlocked.
+playing a specified game. Once the specified game quits then the cursor is unlocked.
  
 ## How to use
 ```
