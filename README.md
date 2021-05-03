@@ -19,7 +19,14 @@ OPTIONS:
   -exe "<Executable file>"	Locks the cursor when this exe file becomes a process
   -h, -help					Print version and help info and exits 
 ```
- 
+
+## Usage example
+```
+CursorLocker.exe -exe "RomeTW.exe"
+```
+The above will start CursorLocker.exe and see if RomeTW.exe is currently a process. If it's currently a process then the cursor will be locked to the primary monitor.
+If RomeTW.exe isn't currently a process then CursorLocker.exe will wait to lock the cursor until RomeTW.exe is a process
+
 ## Thanks
 The CursorLocker icon is derived from an icon found on game-icons.net and made by Lorc, http://lorcblog.blogspot.com
  
