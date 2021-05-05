@@ -14,7 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-const static wchar_t* PROGRAM_VERSION = L"1.0.21.5.2"; // Major-Minor-Year-Month-Day
+const static wchar_t* PROGRAM_VERSION = L"1.0.21.5.4"; // Major-Minor-Year-Month-Day
 
 struct ProgramCmdLineOptions
 {
@@ -69,35 +69,13 @@ DWORD GetProcessID( const std::wstring& processName )
 	return processID;
 }
 
-std::wstring GetProcessName( const DWORD& processID )
+BOOL IsProcessRunning(DWORD pid)
 {
-	std::wstring processName;
-
-	WTS_PROCESS_INFO* processes;
-	DWORD processCount;
-	if( WTSEnumerateProcesses(
-			WTS_CURRENT_SERVER_HANDLE,
-			0, // reserved
-			1, // Specifies the version of the enumeration request. Must be 1.
-			&processes,
-			&processCount
-		)
-	)
-	{
-		for( unsigned int c = 0; c < processCount; c++ )
-		{
-			if( processID == processes[c].ProcessId )
-			{
-				processName = processes[c].pProcessName;
-				break;
-			}
-		}
-
-		// OK we need to clean up
-		WTSFreeMemory( processes );
-	}
-
-	return processName;
+	// Thanks: https://stackoverflow.com/questions/1591342/c-how-to-determine-if-a-windows-process-is-running
+    HANDLE process = OpenProcess(SYNCHRONIZE, FALSE, pid);
+    DWORD ret = WaitForSingleObject(process, 0);
+    CloseHandle(process);
+    return ret == WAIT_TIMEOUT;
 }
 
 static BOOL CALLBACK MonitorEnum(HMONITOR hMon,HDC hdc,LPRECT lprcMonitor,LPARAM pData)
@@ -205,41 +183,32 @@ int wmain( int argc , wchar_t** argv )
 
 	exePID = GetProcessID( programCmdLineOptions.exeName );
 
-	bool bPrintedProcessStartedMsg = false;
+	//bool bPrintedProcessStartedMsg = false;
 	bool bRunning = true;
 	while( bRunning )
 	{
+		// if the exe of interest's PID is 0 then this program has just started and we need to see if
+		// the exe of interest is running or not.
 		if( 0 == exePID )
 		{
 			exePID = GetProcessID( programCmdLineOptions.exeName );
-		}
-			
-		// if the PID is valid lets check to see if it's still running
-		if( 0 != exePID )
-		{
-			std::wstring processName = GetProcessName( exePID );
 
-			// if the process PID returns an empty name then lets
-			// assume the process isn't running anymore. So lets quit
-			if( processName.empty()  )
+			if( 0 != exePID )
 			{
-				UnlockCursor(oldCursorClipRect);
-
-				exePID = 0;
-
-				bRunning = false;
-			}
-			else
-			{
-				if( !bPrintedProcessStartedMsg )
-				{
-					PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has started! Cursor is locked to the primary monitor.\n" );
-					bPrintedProcessStartedMsg = true;
-				}
-
+				PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has started! Cursor is locked to the primary monitor.\n" );
 				const RECT primaryMonitorSize = GetPrimaryMonitorScreenRect();
 				LockCursor(primaryMonitorSize);
 			}
+		}
+			
+		// if the exe of interest's PID is valid lets check to see if it's still running
+		if( 0 != exePID && FALSE == IsProcessRunning(exePID) )
+		{
+			UnlockCursor(oldCursorClipRect);
+
+			exePID = 0;
+
+			bRunning = false;
 		}
 		std::this_thread::sleep_for( 
 			std::chrono::milliseconds( 1000 ) 
