@@ -154,7 +154,7 @@ void UnlockCursor( const RECT& oldCursorClipRect )
 int wmain( int argc , wchar_t** argv )
 {
 	PrintToConsole( "\n" );
-	PrintToConsole( "CursorLock V: " << PROGRAM_VERSION << "\n" );
+	PrintToConsole( "CursorLocker V: " << PROGRAM_VERSION << "\n" );
 	PrintToConsole( "\n" );
 
 	ProgramCmdLineOptions programCmdLineOptions;
@@ -162,7 +162,7 @@ int wmain( int argc , wchar_t** argv )
 	{
 		PrintToConsole( 
 			"USAGE:\n"
-			"	CursorLock.exe [OPTIONS]\n\n"
+			"	CursorLocker.exe [OPTIONS]\n\n"
 			"OPTIONS:\n"
 			"	-exe \"<Executable file>\"	Locks the cursor when this exe file becomes a process\n"
 			"	-h, -help			Print version and help info and exits\n"
