@@ -14,7 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-const static wchar_t* PROGRAM_VERSION = L"1.1.21.5.4"; // Major-Minor-Year-Month-Day
+const static wchar_t* PROGRAM_VERSION = L"1.1.21.5.6"; // Major-Minor-Year-Month-Day
 
 struct ProgramCmdLineOptions
 {
@@ -180,8 +180,6 @@ int wmain( int argc , wchar_t** argv )
 
 	RECT oldCursorClipRect;
 	GetClipCursor(&oldCursorClipRect); 
-
-	exePID = GetProcessID( programCmdLineOptions.exeName );
 
 	//bool bPrintedProcessStartedMsg = false;
 	bool bRunning = true;
