@@ -14,7 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-const static wchar_t* PROGRAM_VERSION = L"1.2.21.5.6"; // Major-Minor-Year-Month-Day
+const static wchar_t* PROGRAM_VERSION = L"1.3.21.5.6"; // Major-Minor-Year-Month-Day
 
 struct ProgramCmdLineOptions
 {
@@ -194,9 +194,12 @@ int wmain( int argc , wchar_t** argv )
 			if( 0 != exePID )
 			{
 				PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has started! Cursor is locked to the primary monitor.\n" );
-				const RECT primaryMonitorSize = GetPrimaryMonitorScreenRect();
-				LockCursor(primaryMonitorSize);
 			}
+		}
+		else
+		{
+			const RECT primaryMonitorSize = GetPrimaryMonitorScreenRect();
+			LockCursor(primaryMonitorSize);
 		}
 			
 		// if the exe of interest's PID is valid lets check to see if it's still running
