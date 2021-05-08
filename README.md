@@ -13,11 +13,14 @@ playing a specified game. Once the specified game quits then the cursor is unloc
 ## How to use
 ```
 USAGE:
-  CursorLocker.exe [OPTIONS]
-  
+	CursorLocker.exe -exe "<executable file>" [OPTIONS]
+
 OPTIONS:
-  -exe "<Executable file>"	Locks the cursor when this exe file becomes a process
-  -h, -help					Print version and help info and exits 
+	-exe "<executable file>"	Locks the cursor when this exe file becomes a process or is already a process
+	-h, -help					Print version and help info and exits
+
+ADVANCED OPTIONS:
+	-sleepTime <milliseconds>	How long to sleep before a CursorLocker processing iteration. Default is 800
 ```
 
 ## Usage example
