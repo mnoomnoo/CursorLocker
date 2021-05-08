@@ -3,38 +3,15 @@
 #include <aclapi.h>
 #include <wtsapi32.h>
 
-#include <string>
-#include <iostream>
-#include <sstream>
+#include <wchar.h>
 #include <thread>
-#include <vector>
-#include <algorithm>
 
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-const static wchar_t* PROGRAM_VERSION = L"1.3.21.5.6"; // Major-Minor-Year-Month-Day
-
-struct ProgramCmdLineOptions
-{
-	std::wstring exeName;
-
-	ProgramCmdLineOptions()
-	{
-
-	}
-};
+#include "Common.h"
+#include "ProgramArgs.h"
 
 ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-void __PrintToConsole( const std::wstringstream& ss )
-{
-	std::wcout << ss.str().c_str();
-	std::wcout.flush();
-}
-
-#define PrintToConsole( s ) __PrintToConsole( std::wstringstream() << s )
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -69,13 +46,11 @@ DWORD GetProcessID( const std::wstring& processName )
 	return processID;
 }
 
-BOOL IsProcessRunning(DWORD pid)
+BOOL IsProcessRunning(HANDLE process)
 {
 	// Thanks: https://stackoverflow.com/questions/1591342/c-how-to-determine-if-a-windows-process-is-running
-    HANDLE process = OpenProcess(SYNCHRONIZE, FALSE, pid);
-    DWORD ret = WaitForSingleObject(process, 0);
-    CloseHandle(process);
-    return ret == WAIT_TIMEOUT;
+	const DWORD ret = WaitForSingleObject(process, 0);    
+	return ret == WAIT_TIMEOUT;
 }
 
 static BOOL CALLBACK MonitorEnum(HMONITOR hMon,HDC hdc,LPRECT lprcMonitor,LPARAM pData)
@@ -99,32 +74,6 @@ RECT GetPrimaryMonitorScreenRect()
 	RECT primaryMonitorScreenRect;
 	EnumDisplayMonitors(0, 0, MonitorEnum, (LPARAM)&primaryMonitorScreenRect);
 	return primaryMonitorScreenRect;
-}
-
-bool ProcessProgramArgs(int argc , wchar_t** argv, ProgramCmdLineOptions& programCmdLineOptions)
-{
-	if( 2 >= argc )
-		return false;
-
-	std::vector<std::wstring> cmdArgs;
-	for( int c = argc - 1; c >= 1; c-- )
-		cmdArgs.push_back( argv[c] );
-
-	while( !cmdArgs.empty() )
-	{
-		std::wstring iterItem = cmdArgs.back();
-		cmdArgs.pop_back();
-
-		if( L"-exe" == iterItem && !cmdArgs.empty() )
-		{
-			std::wstring exeParam = cmdArgs.back();
-			cmdArgs.pop_back();
-
-			std::remove_copy(exeParam.begin(), exeParam.end(), std::back_inserter(programCmdLineOptions.exeName), '\"');
-		}
-	}
-
-	return cmdArgs.empty();
 }
 
 void SetWindowsStation()
@@ -160,39 +109,33 @@ int wmain( int argc , wchar_t** argv )
 	ProgramCmdLineOptions programCmdLineOptions;
 	if( !ProcessProgramArgs(argc, argv, programCmdLineOptions) )
 	{
-		PrintToConsole( 
-			"USAGE:\n"
-			"	CursorLocker.exe [OPTIONS]\n\n"
-			"OPTIONS:\n"
-			"	-exe \"<Executable file>\"	Locks the cursor when this exe file becomes a process\n"
-			"	-h, -help			Print version and help info and exits\n"
-			"\n"
-		);
-
 		return 1;
 	}
-
-	PrintToConsole( "Waiting for process: \"" << programCmdLineOptions.exeName.c_str() << "\" to start...\n" );
-
-	DWORD exePID = 0;
-
+	
 	SetWindowsStation();
 
 	RECT oldCursorClipRect;
 	GetClipCursor(&oldCursorClipRect); 
 
-	//bool bPrintedProcessStartedMsg = false;
+	HANDLE exePocessHandle = nullptr;
+	if( DWORD exePID = GetProcessID( programCmdLineOptions.exeName ) )
+	{
+		exePocessHandle = OpenProcess(SYNCHRONIZE, FALSE, exePID);
+		PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" is already running! Cursor is locked to the primary monitor.\n" );
+	}
+	else
+		PrintToConsole( "Waiting for process: \"" << programCmdLineOptions.exeName.c_str() << "\" to start...\n" );
+
 	bool bRunning = true;
 	while( bRunning )
 	{
 		// if the exe of interest's PID is 0 then this program has just started and we need to see if
 		// the exe of interest is running or not.
-		if( 0 == exePID )
+		if( nullptr == exePocessHandle )
 		{
-			exePID = GetProcessID( programCmdLineOptions.exeName );
-
-			if( 0 != exePID )
+			if( DWORD exePID = GetProcessID( programCmdLineOptions.exeName ) )
 			{
+				exePocessHandle = OpenProcess(SYNCHRONIZE, FALSE, exePID);
 				PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has started! Cursor is locked to the primary monitor.\n" );
 			}
 		}
@@ -203,18 +146,22 @@ int wmain( int argc , wchar_t** argv )
 		}
 			
 		// if the exe of interest's PID is valid lets check to see if it's still running
-		if( 0 != exePID && FALSE == IsProcessRunning(exePID) )
+		if( exePocessHandle && FALSE == IsProcessRunning(exePocessHandle) )
 		{
 			UnlockCursor(oldCursorClipRect);
 
-			exePID = 0;
-
 			bRunning = false;
 		}
-		std::this_thread::sleep_for( 
-			std::chrono::milliseconds( 1000 ) 
-		);
+		else
+		{
+			std::this_thread::sleep_for( 
+				std::chrono::milliseconds( programCmdLineOptions.msToSleep ) 
+			);
+		}
 	}
+
+	if( exePocessHandle )
+		CloseHandle(exePocessHandle);
 
 	PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has stopped! Cursor is unlocked.\n" );
 	PrintToConsole( "\n" );

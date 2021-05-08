@@ -148,12 +148,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ProgramArgs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ExeIcon.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CreateReleaseFolder.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="ProgramArgs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,6 +21,9 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ProgramArgs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ExeIcon.rc">
@@ -31,5 +34,13 @@
     <None Include="CreateReleaseFolder.bat">
       <Filter>Create Release Bat</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ProgramArgs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
