@@ -8,6 +8,7 @@
 
 #include "Common.h"
 #include "ProgramArgs.h"
+#include "Monitors.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,28 +54,6 @@ BOOL IsProcessRunning(HANDLE process)
 	return ret == WAIT_TIMEOUT;
 }
 
-static BOOL CALLBACK MonitorEnum(HMONITOR hMon,HDC hdc,LPRECT lprcMonitor,LPARAM pData)
-{
-	MONITORINFO mi;
-	mi.cbSize = sizeof MONITORINFO;
-	if( GetMonitorInfo( hMon, &mi ) )
-	{
-		if( MONITORINFOF_PRIMARY == ( mi.dwFlags & MONITORINFOF_PRIMARY ) )
-		{
-			RECT* primaryMonitorScreenRect = reinterpret_cast<RECT*>(pData);
-			*primaryMonitorScreenRect = *lprcMonitor;
-		}
-	}
-
-	return TRUE;
-}
-
-RECT GetPrimaryMonitorScreenRect()
-{
-	RECT primaryMonitorScreenRect;
-	EnumDisplayMonitors(0, 0, MonitorEnum, (LPARAM)&primaryMonitorScreenRect);
-	return primaryMonitorScreenRect;
-}
 
 void SetWindowsStation()
 {

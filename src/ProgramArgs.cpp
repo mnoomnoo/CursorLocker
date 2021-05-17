@@ -95,6 +95,10 @@ bool ProcessProgramArgs(int argc , wchar_t** argv, ProgramCmdLineOptions& progra
 			else
 				bProcessedProgramArgs = false;
 		}
+		else if( L"-lmon" == iterItem )
+		{
+
+		}
 	}
 
 	return bProcessedProgramArgs;
