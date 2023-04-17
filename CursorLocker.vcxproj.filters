@@ -21,6 +21,9 @@
     <None Include="CreateReleaseFolder.bat">
       <Filter>Create Release Bat</Filter>
     </None>
+    <None Include="src\help.ht">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources\ExeIcon.rc">

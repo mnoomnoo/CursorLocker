@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 
-const static wchar_t* PROGRAM_VERSION = L"1.3.21.7.5"; // Major-Minor-Year-Month-Day
+const static wchar_t* PROGRAM_VERSION = L"2.0.23.4.16"; // Major-Minor-Year-Month-Day
 
 #define __PRINT_TO_VS_OUTPUT_WINDOW
 #ifdef __PRINT_TO_VS_OUTPUT_WINDOW

@@ -5,18 +5,10 @@
 
 #include "Common.h"
 
-const static wchar_t* PROGRAM_HELP =
-	L"USAGE:\n"
-	L"	CursorLocker.exe -exe \"<executable file>\" [OPTIONS]\n"
-	L"\n"
-	L"OPTIONS:\n"
-	L"	-exe \"<executable file>\"	Locks the cursor when this exe file becomes a process or is already a process\n"
-	L"	-h, -help			Print version and help info and exits\n"
-	L"\n"
-	L"ADVANCED OPTIONS:\n"
-	L"	-sleepTime <milliseconds>	How long to sleep before a CursorLocker processing iteration. Default is 800\n"
-	L"\n"
+constexpr const char* PROGRAM_HELP = 
+#include "help.ht"
 ;
+
 
 ProgramCmdLineOptions::ProgramCmdLineOptions()
 {
@@ -41,14 +33,14 @@ bool ProcessProgramArgs(int argc , wchar_t** argv, ProgramCmdLineOptions& progra
 
 	if( DoesCommandArgsHaveHelpOption( cmdArgs ) )
 	{
-		PrintToConsole( PROGRAM_HELP );
+		PrintToConsole( PROGRAM_HELP << "\n");
 		return false;
 	}
 
 	if( 2 >= argc )
 	{
-		PrintToConsole( L"Not enough parameters.\n\n" );
-		PrintToConsole( PROGRAM_HELP );
+		PrintToConsole( L"Not enough parameters.\n" );
+		PrintToConsole( PROGRAM_HELP << "\n");
 		return false;
 	}
 
@@ -62,16 +54,9 @@ bool ProcessProgramArgs(int argc , wchar_t** argv, ProgramCmdLineOptions& progra
 		if( cmdArgs.empty() )
 			break;
 
-		if( L"-exe" == iterItem )
+		if (programCmdLineOptions.exeName.empty())
 		{
-			if( !cmdArgs.empty() )
-			{
-				std::wstring exeParam = cmdArgs.back();
-				cmdArgs.pop_back();
-				std::remove_copy(exeParam.begin(), exeParam.end(), std::back_inserter(programCmdLineOptions.exeName), '\"');
-			}
-			else
-				bProcessedProgramArgs = false;
+			std::copy(iterItem.begin(), iterItem.end(), std::back_inserter(programCmdLineOptions.exeName));
 		}
 		else if( L"-sleepTime" == iterItem )
 		{

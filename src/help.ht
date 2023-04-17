@@ -1,0 +1,10 @@
+R"(
+This program locks the cursor to a monitor when specified exe file becomes a process or is already a process
+
+USAGE:
+	CursorLocker.exe <executable_file.exe> [OPTIONS]
+
+OPTIONS:	
+	-h, -help			Print version and help info and exits
+	-sleepTime <milliseconds>	How long to sleep before a CursorLocker processing iteration. Default is 800
+)"

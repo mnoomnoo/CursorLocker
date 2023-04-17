@@ -97,46 +97,56 @@ int wmain( int argc , wchar_t** argv )
 	GetClipCursor(&oldCursorClipRect); 
 
 	HANDLE exePocessHandle = nullptr;
-	if( DWORD exePID = GetProcessID( programCmdLineOptions.exeName ) )
+	DWORD exePID = 0;
+
+	if( exePID = GetProcessID( programCmdLineOptions.exeName ) )
 	{
 		exePocessHandle = OpenProcess(SYNCHRONIZE, FALSE, exePID);
-		PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" is already running! Cursor is locked to the primary monitor.\n" );
+		if(exePocessHandle) 
+		{
+			PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" is already running! Cursor is locked to the primary monitor.\n" );
+		}
 	}
 	else
-		PrintToConsole( "Waiting for process: \"" << programCmdLineOptions.exeName.c_str() << "\" to start...\n" );
-
-	bool bRunning = true;
-	while( bRunning )
 	{
-		// if the exe of interest's PID is 0 then this program has just started and we need to see if
-		// the exe of interest is running or not.
+		PrintToConsole( "Waiting for process: \"" << programCmdLineOptions.exeName.c_str() << "\" to start...\n" );
+	}
+
+	while( true )
+	{
+		// If the process handle is null then lets see if we can get the PID of the process name.
+		// If the process name has a valid PID lets open the process handle so we can query whether it's running or not
 		if( nullptr == exePocessHandle )
 		{
-			if( DWORD exePID = GetProcessID( programCmdLineOptions.exeName ) )
+			if( exePID = GetProcessID( programCmdLineOptions.exeName ) )
 			{
 				exePocessHandle = OpenProcess(SYNCHRONIZE, FALSE, exePID);
-				PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has started! Cursor is locked to the primary monitor.\n" );
+				if(exePocessHandle) 
+					PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has started! Cursor is locked to the primary monitor.\n" );
 			}
 		}
-		else
-		{
-			const RECT primaryMonitorSize = GetPrimaryMonitorScreenRect();
-			LockCursor(primaryMonitorSize);
-		}
 			
-		// if the exe of interest's PID is valid lets check to see if it's still running
-		if( exePocessHandle && FALSE == IsProcessRunning(exePocessHandle) )
+		// If the process handle is not null then lets see if the process is running.
+		// If the process is running lets lock the cursor to the rectangle of the primary monitor
+		// Else lets un-lock the cursor and exit the program
+		else if( nullptr != exePocessHandle )
 		{
-			UnlockCursor(oldCursorClipRect);
+			if(TRUE == IsProcessRunning(exePocessHandle) )
+			{
+				const RECT primaryMonitorSize = GetPrimaryMonitorScreenRect();
+				LockCursor(primaryMonitorSize);
+			}
+			else
+			{
+				UnlockCursor(oldCursorClipRect);
+				break;
+			}
+		}
 
-			bRunning = false;
-		}
-		else
-		{
-			std::this_thread::sleep_for( 
-				std::chrono::milliseconds( programCmdLineOptions.msToSleep ) 
-			);
-		}
+		std::this_thread::sleep_for( 
+			std::chrono::milliseconds( programCmdLineOptions.msToSleep ) 
+		);
+
 	}
 
 	if( exePocessHandle )

@@ -21,7 +21,7 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 
 RECT GetPrimaryMonitorScreenRect()
 {
-	RECT primaryMonitorScreenRect;
+	RECT primaryMonitorScreenRect = {0,0,0,0};
 	EnumDisplayMonitors(nullptr, nullptr, MonitorEnum, (LPARAM)&primaryMonitorScreenRect);
 	return primaryMonitorScreenRect;
 }
