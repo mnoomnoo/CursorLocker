@@ -1,5 +1,6 @@
 
 #include <thread>
+#include <atomic>
 
 #include "Common.h"
 #include "ProgramArgs.h"
@@ -9,6 +10,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+RECT oldCursorClipRect = {0,0,0,0};
+HANDLE exePocessHandle = nullptr;
+std::atomic<bool> runLoop;
+
+////////////////////////////////////////////////////////////////////////////////
 
 void LockCursor( const RECT& lpRect )
 {
@@ -18,6 +24,27 @@ void LockCursor( const RECT& lpRect )
 void UnlockCursor( const RECT& oldCursorClipRect )
 {
 	ClipCursor(&oldCursorClipRect); 
+}
+
+void CleanupCursorLocker()
+{
+	UnlockCursor(oldCursorClipRect);
+	if (exePocessHandle)
+	{
+		CloseHandle(exePocessHandle);
+		exePocessHandle = nullptr;
+	}
+}
+
+BOOL WINAPI ConsoleHandler(DWORD signal) {
+
+	if (signal == CTRL_C_EVENT)
+	{
+		runLoop.store(false);
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,12 +61,12 @@ int wmain( int argc , wchar_t** argv )
 		return 1;
 	}
 
+	SetConsoleCtrlHandler(ConsoleHandler, TRUE);
+
 	InitMonitorAPI();
-
-	RECT oldCursorClipRect;
+	
 	GetClipCursor(&oldCursorClipRect); 
-
-	HANDLE exePocessHandle = nullptr;
+	
 	DWORD exePID = 0;
 
 	if( exePID = GetProcessID( programCmdLineOptions.exeName ) )
@@ -55,7 +82,9 @@ int wmain( int argc , wchar_t** argv )
 		PrintToConsole( "Waiting for process: \"" << programCmdLineOptions.exeName.c_str() << "\" to start...\n" );
 	}
 
-	while( true )
+	runLoop.store(true);
+
+	while( runLoop.load() )
 	{
 		// If the process handle is null then lets see if we can get the PID of the process name.
 		// If the process name has a valid PID lets open the process handle so we can query whether it's running or not
@@ -81,7 +110,6 @@ int wmain( int argc , wchar_t** argv )
 			}
 			else
 			{
-				UnlockCursor(oldCursorClipRect);
 				break;
 			}
 		}
@@ -92,10 +120,13 @@ int wmain( int argc , wchar_t** argv )
 
 	}
 
-	if( exePocessHandle )
-		CloseHandle(exePocessHandle);
+	if (exePocessHandle) 
+	{
+		PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has stopped! Cursor is unlocked.\n" );
+	}
 
-	PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has stopped! Cursor is unlocked.\n" );
+	CleanupCursorLocker();
+
 	PrintToConsole( "\n" );
 
 	return 0;

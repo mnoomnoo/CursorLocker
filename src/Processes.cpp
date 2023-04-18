@@ -36,6 +36,9 @@ DWORD GetProcessID( const std::wstring& processName )
 }
 BOOL IsProcessRunning(HANDLE process)
 {
+	if(!process)
+		return FALSE;
+
 	// Thanks: https://stackoverflow.com/questions/1591342/c-how-to-determine-if-a-windows-process-is-running
 	const DWORD ret = WaitForSingleObject(process, 0);    
 	return ret == WAIT_TIMEOUT;
