@@ -7,16 +7,16 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-std::vector<MONITORINFO> monitors;
+std::vector<MONITORINFOEX> monitors;
 
 ////////////////////////////////////////////////////////////////////////////////
 
 static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData)
 {
-	std::vector<MONITORINFO>* mons = reinterpret_cast<std::vector<MONITORINFO>*>(pData);
+	std::vector<MONITORINFOEX>* mons = reinterpret_cast<std::vector<MONITORINFOEX>*>(pData);
 
-	MONITORINFO mi;
-	mi.cbSize = sizeof MONITORINFO;
+	MONITORINFOEX mi;
+	mi.cbSize = sizeof MONITORINFOEX;
 	if( GetMonitorInfo( hMon, &mi ) )
 	{
 		mons->push_back(mi);
@@ -25,11 +25,11 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 	return TRUE;
 }
 
-bool GetPrimaryMonitor(MONITORINFO& monInfo) 
+bool GetPrimaryMonitor(MONITORINFOEX& monInfo) 
 {
 	for (size_t i = 0; i < monitors.size(); i++)
 	{
-		MONITORINFO mi = monitors[i];
+		MONITORINFOEX mi = monitors[i];
 		if (MONITORINFOF_PRIMARY == (mi.dwFlags & MONITORINFOF_PRIMARY))
 		{
 			monInfo = mi;
@@ -52,7 +52,7 @@ void InitMonitorAPI()
 RECT GetPrimaryMonitorScreenRect_DPIScaled()
 {
 	RECT primaryMonitorScreenRect = {0,0,0,0};
-	MONITORINFO monInfo;
+	MONITORINFOEX monInfo;
 
 	if (GetPrimaryMonitor(monInfo))
 	{
