@@ -1,12 +1,13 @@
 #pragma once
 
-#include <Windows.h>
+#include <string>
+
+#include <aclapi.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-void InitMonitorAPI();
+DWORD GetProcessID( const std::wstring& processName );
 
-RECT GetPrimaryMonitorScreenRect_DPIScaled();
-
+BOOL IsProcessRunning(HANDLE process);
 

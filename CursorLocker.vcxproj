@@ -156,11 +156,13 @@
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Monitors.cpp" />
+    <ClCompile Include="src\Processes.cpp" />
     <ClCompile Include="src\ProgramArgs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\Monitors.h" />
+    <ClInclude Include="src\Processes.h" />
     <ClInclude Include="src\ProgramArgs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

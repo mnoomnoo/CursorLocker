@@ -1,71 +1,14 @@
 
-
-#include <aclapi.h>
-#include <wtsapi32.h>
-
-#include <wchar.h>
 #include <thread>
 
 #include "Common.h"
 #include "ProgramArgs.h"
 #include "Monitors.h"
+#include "Processes.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-
-////////////////////////////////////////////////////////////////////////////////
-
-DWORD GetProcessID( const std::wstring& processName )
-{
-	DWORD processID = 0;
-
-	WTS_PROCESS_INFO* processes;
-	DWORD processCount;
-	if( WTSEnumerateProcesses(
-			WTS_CURRENT_SERVER_HANDLE,
-			0, // reserved
-			1, // Specifies the version of the enumeration request. Must be 1.
-			&processes,
-			&processCount
-		)
-	)
-	{
-		for( unsigned int c = 0; c < processCount; c++ )
-		{
-			if( processName == std::wstring(processes[c].pProcessName) )
-			{
-				processID = processes[c].ProcessId;
-				break;
-			}
-		}
-
-		// OK we need to clean up
-		WTSFreeMemory( processes );
-	}
-
-	return processID;
-}
-
-BOOL IsProcessRunning(HANDLE process)
-{
-	// Thanks: https://stackoverflow.com/questions/1591342/c-how-to-determine-if-a-windows-process-is-running
-	const DWORD ret = WaitForSingleObject(process, 0);    
-	return ret == WAIT_TIMEOUT;
-}
-
-
-void SetWindowsStation()
-{
-	HWINSTA thisWindowStation = OpenWindowStation(
-		L"winsta0", 
-		FALSE,
-		WINSTA_READATTRIBUTES | WINSTA_WRITEATTRIBUTES
-	);
-
-	BOOL bRes = SetProcessWindowStation( thisWindowStation );
-	bRes = CloseWindowStation( thisWindowStation );
-}
 
 void LockCursor( const RECT& lpRect )
 {
@@ -90,8 +33,8 @@ int wmain( int argc , wchar_t** argv )
 	{
 		return 1;
 	}
-	
-	SetWindowsStation();
+
+	InitMonitorAPI();
 
 	RECT oldCursorClipRect;
 	GetClipCursor(&oldCursorClipRect); 
@@ -133,7 +76,7 @@ int wmain( int argc , wchar_t** argv )
 		{
 			if(TRUE == IsProcessRunning(exePocessHandle) )
 			{
-				const RECT primaryMonitorSize = GetPrimaryMonitorScreenRect();
+				const RECT primaryMonitorSize = GetPrimaryMonitorScreenRect_DPIScaled();
 				LockCursor(primaryMonitorSize);
 			}
 			else

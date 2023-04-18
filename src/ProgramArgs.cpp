@@ -28,18 +28,18 @@ bool DoesCommandArgsHaveHelpOption( std::vector<std::wstring>& cmdArgs )
 bool ProcessProgramArgs(int argc , wchar_t** argv, ProgramCmdLineOptions& programCmdLineOptions)
 {
 	std::vector<std::wstring> cmdArgs;
-	for( int c = argc - 1; c >= 1; c-- )
+	for (size_t c = 1; c < argc; c++)
 		cmdArgs.push_back( argv[c] );
 
-	if( DoesCommandArgsHaveHelpOption( cmdArgs ) )
+	if( cmdArgs.empty() )
 	{
+		PrintToConsole( L"Not enough parameters.\n" );
 		PrintToConsole( PROGRAM_HELP << "\n");
 		return false;
 	}
 
-	if( 2 >= argc )
+	if( DoesCommandArgsHaveHelpOption( cmdArgs ) )
 	{
-		PrintToConsole( L"Not enough parameters.\n" );
 		PrintToConsole( PROGRAM_HELP << "\n");
 		return false;
 	}
@@ -50,9 +50,6 @@ bool ProcessProgramArgs(int argc , wchar_t** argv, ProgramCmdLineOptions& progra
 	{
 		std::wstring iterItem = cmdArgs.back();
 		cmdArgs.pop_back();
-
-		if( cmdArgs.empty() )
-			break;
 
 		if (programCmdLineOptions.exeName.empty())
 		{
