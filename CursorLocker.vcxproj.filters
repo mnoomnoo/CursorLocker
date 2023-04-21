@@ -24,6 +24,7 @@
     <None Include="src\help.ht">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources\ExeIcon.rc">

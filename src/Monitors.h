@@ -7,6 +7,10 @@
 
 void InitMonitorAPI();
 
+void CleanupMonitorAPI();
+
 RECT GetPrimaryMonitorScreenRect_DPIScaled();
+
+void DrawRectOnPrimaryMonitor();
 
 

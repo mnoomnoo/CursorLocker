@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="CreateReleaseFolder.bat" />
+    <None Include="README.md" />
     <None Include="src\help.ht" />
   </ItemGroup>
   <ItemGroup>

@@ -34,6 +34,7 @@ void CleanupCursorLocker()
 		CloseHandle(exePocessHandle);
 		exePocessHandle = nullptr;
 	}
+	CleanupMonitorAPI();
 }
 
 BOOL WINAPI ConsoleHandler(DWORD signal) {
@@ -64,6 +65,8 @@ int wmain( int argc , wchar_t** argv )
 	SetConsoleCtrlHandler(ConsoleHandler, TRUE);
 
 	InitMonitorAPI();
+
+	//DrawRectOnPrimaryMonitor();
 	
 	GetClipCursor(&oldCursorClipRect); 
 	
