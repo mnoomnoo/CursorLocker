@@ -1,4 +1,5 @@
 
+set(APP_ICON_RESOURCE "${PROJECT_SOURCE_DIR}/resources/ExeIcon.rc")
 
 add_executable(
     CursorLocker
@@ -6,6 +7,7 @@ add_executable(
 	Monitors.cpp
 	Processes.cpp
 	ProgramArgs.cpp
+	${APP_ICON_RESOURCE}
 )
 
 target_include_directories(
