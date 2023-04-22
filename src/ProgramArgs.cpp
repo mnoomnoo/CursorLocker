@@ -15,25 +15,25 @@ ProgramCmdLineOptions::ProgramCmdLineOptions()
 	msToSleep = 800;
 }
 
-bool DoesCommandArgsHaveHelpOption( std::vector<std::wstring>& cmdArgs )
+bool DoesCommandArgsHaveHelpOption( std::vector<std::string>& cmdArgs )
 {
 	for( auto iter : cmdArgs )
 	{
-		if( L"-h" == iter || L"-help" == iter )
+		if( "-h" == iter || "-help" == iter )
 			return true;
 	}
 	return false;
 }
 
-bool ProcessProgramArgs(int argc , wchar_t** argv, ProgramCmdLineOptions& programCmdLineOptions)
+bool ProcessProgramArgs(int argc , const char** argv, ProgramCmdLineOptions& programCmdLineOptions)
 {
-	std::vector<std::wstring> cmdArgs;
+	std::vector<std::string> cmdArgs;
 	for (size_t c = 1; c < argc; c++)
 		cmdArgs.push_back( argv[c] );
 
 	if( cmdArgs.empty() )
 	{
-		PrintToConsole( L"Not enough parameters.\n" );
+		PrintToConsole( "Not enough parameters.\n" );
 		PrintToConsole( PROGRAM_HELP << "\n");
 		return false;
 	}
@@ -48,22 +48,22 @@ bool ProcessProgramArgs(int argc , wchar_t** argv, ProgramCmdLineOptions& progra
 
 	while( !cmdArgs.empty() )
 	{
-		std::wstring iterItem = cmdArgs.back();
+		std::string iterItem = cmdArgs.back();
 		cmdArgs.pop_back();
 
 		if (programCmdLineOptions.exeName.empty())
 		{
 			std::copy(iterItem.begin(), iterItem.end(), std::back_inserter(programCmdLineOptions.exeName));
 		}
-		else if( L"-sleepTime" == iterItem )
+		else if( "-sleepTime" == iterItem )
 		{
 			if( !cmdArgs.empty() )
 			{
-				std::wstring exeParam = cmdArgs.back();
+				std::string exeParam = cmdArgs.back();
 				cmdArgs.pop_back();
 
-				wchar_t* charEnd = nullptr;
-				const unsigned long paramToUInt = std::wcstoul( exeParam.c_str(), &charEnd, 10 );
+				// const char* charEnd = nullptr;
+				const unsigned long paramToUInt = std::stoul( exeParam.c_str(), nullptr, 10 );
 				if( 0 != paramToUInt )
 					programCmdLineOptions.msToSleep = paramToUInt;
 				else
@@ -77,7 +77,7 @@ bool ProcessProgramArgs(int argc , wchar_t** argv, ProgramCmdLineOptions& progra
 			else
 				bProcessedProgramArgs = false;
 		}
-		else if( L"-lmon" == iterItem )
+		else if( "-lmon" == iterItem )
 		{
 
 		}

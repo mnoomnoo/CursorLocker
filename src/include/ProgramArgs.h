@@ -5,11 +5,11 @@
 
 struct ProgramCmdLineOptions
 {
-	std::wstring exeName;
+	std::string exeName;
 	unsigned int msToSleep;
 
 	ProgramCmdLineOptions();
 };
 
 
-bool ProcessProgramArgs(int argc , wchar_t** argv, ProgramCmdLineOptions& programCmdLineOptions);
+bool ProcessProgramArgs(int argc , const char** argv, ProgramCmdLineOptions& programCmdLineOptions);
