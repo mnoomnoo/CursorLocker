@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-DWORD GetProcessID( const std::wstring& processName )
+DWORD GetProcessID( const std::string& processName )
 {
 	DWORD processID = 0;
 	WTS_PROCESS_INFO* processes;
@@ -23,7 +23,7 @@ DWORD GetProcessID( const std::wstring& processName )
 	{
 		for( unsigned int c = 0; c < processCount; c++ )
 		{
-			if( processName == std::wstring(processes[c].pProcessName) )
+			if( processName == std::string(processes[c].pProcessName) )
 			{
 				processID = processes[c].ProcessId;
 				break;

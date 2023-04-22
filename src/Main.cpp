@@ -50,7 +50,7 @@ BOOL WINAPI ConsoleHandler(DWORD signal) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int wmain( int argc , wchar_t** argv )
+int main( int argc , const char** argv )
 {
 	PrintToConsole( "\n" );
 	PrintToConsole( "CursorLocker V: " << PROGRAM_VERSION << "\n" );
