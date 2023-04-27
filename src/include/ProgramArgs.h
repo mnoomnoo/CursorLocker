@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PROGRAMARGS_H
+#define PROGRAMARGS_H
 
 #include <string>
 
@@ -13,3 +14,5 @@ struct ProgramCmdLineOptions
 
 
 bool ProcessProgramArgs(int argc , const char** argv, ProgramCmdLineOptions& programCmdLineOptions);
+
+#endif // PROGRAMARGS_H

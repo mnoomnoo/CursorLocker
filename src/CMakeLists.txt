@@ -7,6 +7,7 @@ add_executable(
 	Monitors.cpp
 	Processes.cpp
 	ProgramArgs.cpp
+	Timer.cpp
 	${APP_ICON_RESOURCE}
 )
 

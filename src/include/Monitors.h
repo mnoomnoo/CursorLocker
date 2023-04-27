@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MONITORS_H
+#define MONITORS_H
 
 #include <Windows.h>
 
@@ -13,4 +14,4 @@ RECT GetPrimaryMonitorScreenRect_DPIScaled();
 
 void DrawRectOnPrimaryMonitor();
 
-
+#endif // MONITORS_H

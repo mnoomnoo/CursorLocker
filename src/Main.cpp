@@ -6,6 +6,7 @@
 #include "ProgramArgs.h"
 #include "Monitors.h"
 #include "Processes.h"
+#include "Timer.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,6 +88,8 @@ int main( int argc , const char** argv )
 
 	runLoop.store(true);
 
+	TimeStamp startTime = GetTimeStamp();
+
 	while( runLoop.load() )
 	{
 		// If the process handle is null then lets see if we can get the PID of the process name.
@@ -129,6 +132,12 @@ int main( int argc , const char** argv )
 	}
 
 	CleanupCursorLocker();
+
+	PrintToConsole( "\n" );
+
+	const uint64_t ms = GetElapsedMilliseconds(startTime, GetTimeStamp());
+
+	PrintToConsole( "Elapsed program time: " << ms / 1000 << " ms\n" );
 
 	PrintToConsole( "\n" );
 

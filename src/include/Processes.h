@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PROCESSES_H
+#define PROCESSES_H
 
 #include <string>
 
@@ -11,3 +12,4 @@ DWORD GetProcessID( const std::string& processName );
 
 BOOL IsProcessRunning(HANDLE process);
 
+#endif // PROCESSES_H
