@@ -15,4 +15,6 @@ struct ProgramCmdLineOptions
 
 bool ProcessProgramArgs(int argc , const char** argv, ProgramCmdLineOptions& programCmdLineOptions);
 
+void PrintHelp();
+
 #endif // PROGRAMARGS_H

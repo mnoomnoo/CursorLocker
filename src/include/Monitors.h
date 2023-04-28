@@ -12,6 +12,5 @@ void CleanupMonitorAPI();
 
 RECT GetPrimaryMonitorScreenRect_DPIScaled();
 
-void DrawRectOnPrimaryMonitor();
 
 #endif // MONITORS_H

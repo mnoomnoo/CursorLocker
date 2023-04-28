@@ -60,14 +60,13 @@ int main( int argc , const char** argv )
 	ProgramCmdLineOptions programCmdLineOptions;
 	if( !ProcessProgramArgs(argc, argv, programCmdLineOptions) )
 	{
+		PrintHelp();
 		return 1;
 	}
 
 	SetConsoleCtrlHandler(ConsoleHandler, TRUE);
 
 	InitMonitorAPI();
-
-	//DrawRectOnPrimaryMonitor();
 	
 	GetClipCursor(&oldCursorClipRect); 
 	
@@ -129,15 +128,12 @@ int main( int argc , const char** argv )
 	if (exePocessHandle) 
 	{
 		PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has stopped! Cursor is unlocked.\n" );
+		PrintToConsole( "\n" );
+		const uint64_t ms = GetElapsedMilliseconds(startTime, GetTimeStamp());
+		PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" was locked for: " << ms / 1000 << " seconds and " << ms % 1000 << " ms \n" );		
 	}
 
 	CleanupCursorLocker();
-
-	PrintToConsole( "\n" );
-
-	const uint64_t ms = GetElapsedMilliseconds(startTime, GetTimeStamp());
-
-	PrintToConsole( "Elapsed program time: " << ms / 1000 << " ms\n" );
 
 	PrintToConsole( "\n" );
 

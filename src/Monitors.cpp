@@ -104,12 +104,14 @@ RECT GetPrimaryMonitorScreenRect_DPIScaled()
 	return primaryMonitorScreenRect;
 }
 
-void DrawRectOnPrimaryMonitor()
-{
-	Monitor mon;
-	if (GetPrimaryMonitor(mon))
-	{
-		RECT colorRect = {200,200,250,250};
-		FillRect(mon.hdc, &colorRect, (HBRUSH) (COLOR_HOTLIGHT+1));
-	}
-}
+// void DrawRectOnPrimaryMonitor()
+// {
+// 	Monitor mon;
+// 	if (GetPrimaryMonitor(mon))
+// 	{
+// 		RECT colorRect = {200,200,800,800};
+// 		// FillRect(mon.hdc, &colorRect, (HBRUSH) (COLOR_HOTLIGHT+1));
+// 		while(true)
+// 		DrawText(mon.hdc, "Primary", -1, &colorRect, DT_CENTER );
+// 	}
+// }

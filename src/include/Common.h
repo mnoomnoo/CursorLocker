@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 
-const static wchar_t* PROGRAM_VERSION = L"2.0.23.4.26"; // Major-Minor-Year-Month-Day
+const static char* PROGRAM_VERSION = "2.0.23.4.27"; // Major-Minor-Year-Month-Day
 
 #define __PRINT_TO_VS_OUTPUT_WINDOW
 #ifdef __PRINT_TO_VS_OUTPUT_WINDOW
@@ -13,11 +13,11 @@ const static wchar_t* PROGRAM_VERSION = L"2.0.23.4.26"; // Major-Minor-Year-Mont
 
 inline void __PrintToConsole( const std::stringstream& ss )
 {
-	const char* msg = ss.str().c_str();
+	std::string msg = ss.str();
 	std::cout << msg;
 	std::cout.flush();
 #ifdef __PRINT_TO_VS_OUTPUT_WINDOW
-	OutputDebugString( msg );
+	OutputDebugString( msg.c_str() );
 #endif
 }
 
