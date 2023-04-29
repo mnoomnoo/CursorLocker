@@ -1,5 +1,5 @@
 R"(
-This program locks the cursor to a monitor when specified exe file becomes a process or is already a process
+This program locks the cursor to a monitor when the specified exe file becomes a process or is already a process
 
 USAGE:
 	CursorLocker.exe <executable_file.exe> [OPTIONS]
