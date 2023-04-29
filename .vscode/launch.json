@@ -14,7 +14,7 @@
 			// "args": ["123123DropBox.exe", "-sleepTime", "1200"],
 			// "args": ["123123DropBox.exe", "-sleepTime", "a1200"],
 			// "args": ["123123DropBox.exe", "-sleepTime"],
-			"args": ["-exeConfigs"],
+			"args": ["-exesConfig"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],

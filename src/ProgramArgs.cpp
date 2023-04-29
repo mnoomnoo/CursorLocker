@@ -30,7 +30,7 @@ bool DoesCommandArgsHaveExeConfigsOption( std::vector<std::string>& cmdArgs )
 {
 	for( auto iter : cmdArgs )
 	{
-		if( "-ec" == iter || "-exeConfigs" == iter )
+		if( "-ec" == iter || "-exesConfig" == iter )
 			return true;
 	}
 	return false;
@@ -69,7 +69,7 @@ bool ProcessProgramArgs(int argc , const char** argv, ProgramCmdLineOptions& pro
 
 		if(hasExeConfigs)
 		{
-			std::ifstream file("exesConfigs.ecfg");
+			std::ifstream file("exesConfig.ecfg");
 			if (file.is_open())
 			{
 				std::string line;

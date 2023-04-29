@@ -6,7 +6,7 @@ USAGE:
 
 OPTIONS:	
 	-h, -help					- Print version and help info and exits
-	-ec, -exeConfigs			- Loads the exesConfigs.ecfg file which contains a list of executable files to search for. 
+	-ec, -exesConfig			- Loads the exesConfigs.ecfg file which contains a list of executable files to search for. 
 								  First exe in that list that becomes a process or is already a process triggers the cursor to lock to the primary monitor.
 								  Ignores the <executable_file.exe> passed in.
 	-sleepTime <milliseconds>	- How long to sleep before a CursorLocker processing iteration. Default is 800 ms
