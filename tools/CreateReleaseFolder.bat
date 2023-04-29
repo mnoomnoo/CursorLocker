@@ -8,5 +8,5 @@ rem lets create the folders we need for the release
 mkdir CursorLockerRelease\
 
 rem copy the release data to the release folder
-xcopy /y x64\Release\CursorLocker.exe CursorLockerRelease\
+xcopy /y build\Release\CursorLocker.exe CursorLockerRelease\
 xcopy /y README.md CursorLockerRelease\
