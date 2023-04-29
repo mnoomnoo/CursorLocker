@@ -129,8 +129,22 @@ int main( int argc , const char** argv )
 	{
 		PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has stopped! Cursor is unlocked.\n" );
 		PrintToConsole( "\n" );
-		const uint64_t ms = GetElapsedMilliseconds(startTime, GetTimeStamp());
-		PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" was locked for: " << ms / 1000 << " seconds and " << ms % 1000 << " ms \n" );		
+
+		uint64_t total_ms = GetElapsedMilliseconds(startTime, GetTimeStamp());
+
+		const uint64_t hours = ((total_ms / 1000) / 60) / 60;
+		total_ms -= hours * 1000 * 60 * 60;
+		const uint64_t mins = (total_ms / 1000) / 60;
+		total_ms -= mins * 1000 * 60;		
+		const uint64_t secs = total_ms / 1000;
+		total_ms -= secs * 1000;		
+		const uint64_t ms = total_ms ;
+		total_ms -= ms;
+
+		PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\"" <<
+			" was locked for: " << hours << " hours " << mins << " minutes "  <<
+			secs << " seconds and " << ms << " ms \n" 
+		);
 	}
 
 	CleanupCursorLocker();
