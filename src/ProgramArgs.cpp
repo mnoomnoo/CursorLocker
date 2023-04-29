@@ -82,6 +82,11 @@ bool ProcessProgramArgs(int argc , const char** argv, ProgramCmdLineOptions& pro
 				}
 				file.close();
 			}
+			else
+			{
+				PrintToConsole( "exesConfigs.ecfg not found\n" );
+				return false;
+			}
 		}
 		else if (programCmdLineOptions.exeNames.empty())
 		{

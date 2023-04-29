@@ -87,7 +87,19 @@ int main( int argc , const char** argv )
 	
 	GetClipCursor(&oldCursorClipRect); 
 
+	const bool exeConfigsOptionUsed = programCmdLineOptions.exeNames.size() > 1;
+
 	std::string exeProcessName;
+
+	if(exeConfigsOptionUsed)
+	{
+		PrintToConsole( "Waiting for the following processes to start...\n" );
+		for( auto iter : programCmdLineOptions.exeNames)
+		{
+			PrintToConsole( "\t- \"" << iter.c_str() << "\"\n" );
+		}
+		PrintToConsole( "\n" );
+	}
 	
 	DWORD exePID = 0;
 	for( auto iter : programCmdLineOptions.exeNames)
@@ -103,7 +115,10 @@ int main( int argc , const char** argv )
 		}
 		else
 		{
-			PrintToConsole( "Waiting for process: \"" << iter.c_str() << "\" to start...\n" );
+			if(!exeConfigsOptionUsed)
+			{
+				PrintToConsole( "Waiting for process: \"" << iter.c_str() << "\" to start...\n" );
+			}
 		}
 	}
 
