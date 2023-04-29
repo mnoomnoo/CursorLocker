@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 
-const static char* PROGRAM_VERSION = "2.0.23.4.27"; // Major-Minor-Year-Month-Day
+const static char* PROGRAM_VERSION = "2.0.23.4.28"; // Major-Minor-Year-Month-Day
 
 #define __PRINT_TO_VS_OUTPUT_WINDOW
 #ifdef __PRINT_TO_VS_OUTPUT_WINDOW
