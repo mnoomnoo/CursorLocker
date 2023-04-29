@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 #include "Common.h"
 
@@ -13,7 +14,6 @@ constexpr const char* PROGRAM_HELP =
 ProgramCmdLineOptions::ProgramCmdLineOptions()
 {
 	msToSleep = 800;
-	loadExeConfigs = false;
 }
 
 bool DoesCommandArgsHaveHelpOption( std::vector<std::string>& cmdArgs )
@@ -21,6 +21,16 @@ bool DoesCommandArgsHaveHelpOption( std::vector<std::string>& cmdArgs )
 	for( auto iter : cmdArgs )
 	{
 		if( "-h" == iter || "-help" == iter )
+			return true;
+	}
+	return false;
+}
+
+bool DoesCommandArgsHaveExeConfigsOption( std::vector<std::string>& cmdArgs )
+{
+	for( auto iter : cmdArgs )
+	{
+		if( "-ec" == iter || "-exeConfigs" == iter )
 			return true;
 	}
 	return false;
@@ -49,15 +59,33 @@ bool ProcessProgramArgs(int argc , const char** argv, ProgramCmdLineOptions& pro
 	{
 		return false;
 	}
+
+	const bool hasExeConfigs = DoesCommandArgsHaveExeConfigsOption(cmdArgs);	
 	
 	while( !cmdArgs.empty() )
 	{
 		std::string iterItem = cmdArgs.back();
 		cmdArgs.pop_back();
 
-		if (programCmdLineOptions.exeName.empty())
+		if(hasExeConfigs)
 		{
-			std::copy(iterItem.begin(), iterItem.end(), std::back_inserter(programCmdLineOptions.exeName));
+			std::ifstream file("exesConfigs.ecfg");
+			if (file.is_open())
+			{
+				std::string line;
+				while(std::getline(file, line))
+				{
+					if(!line.empty())
+					{
+						programCmdLineOptions.exeNames.push_back(line);
+					}
+				}
+				file.close();
+			}
+		}
+		else if (programCmdLineOptions.exeNames.empty())
+		{
+			programCmdLineOptions.exeNames.push_back(iterItem);
 			continue;
 		}
 

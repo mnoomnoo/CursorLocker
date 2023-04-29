@@ -1,7 +1,6 @@
 
 #include <thread>
 #include <atomic>
-#include <fstream>
 
 #include "Common.h"
 #include "ProgramArgs.h"
@@ -50,6 +49,23 @@ BOOL WINAPI ConsoleHandler(DWORD signal) {
 	return FALSE;
 }
 
+std::string SearchForRunningProcess(const std::vector<std::string>& exeNames)
+{
+	DWORD exePID = 0;
+	for( auto iter : exeNames)
+	{
+		if( exePID = GetProcessID( iter ) )
+		{
+			exePocessHandle = OpenProcess(SYNCHRONIZE, FALSE, exePID);
+			if(exePocessHandle) 
+			{
+				PrintToConsole( "Process: \"" << iter.c_str() << "\" has started! Cursor is locked to the primary monitor.\n" );
+				return iter;
+			}
+		}	
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 int main( int argc , const char** argv )
@@ -65,31 +81,30 @@ int main( int argc , const char** argv )
 		return 1;
 	}
 
-	std::ifstream istrm("exeConfigs");
-	if (!istrm.is_open())
-	{
-		
-	}
-
 	SetConsoleCtrlHandler(ConsoleHandler, TRUE);
 
 	InitMonitorAPI();
 	
 	GetClipCursor(&oldCursorClipRect); 
+
+	std::string exeProcessName;
 	
 	DWORD exePID = 0;
-
-	if( exePID = GetProcessID( programCmdLineOptions.exeName ) )
+	for( auto iter : programCmdLineOptions.exeNames)
 	{
-		exePocessHandle = OpenProcess(SYNCHRONIZE, FALSE, exePID);
-		if(exePocessHandle) 
+		if( exePID = GetProcessID( iter ) )
 		{
-			PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" is already running! Cursor is locked to the primary monitor.\n" );
+			exePocessHandle = OpenProcess(SYNCHRONIZE, FALSE, exePID);
+			if(exePocessHandle) 
+			{
+				PrintToConsole( "Process: \"" << iter.c_str() << "\" is already running! Cursor is locked to the primary monitor.\n" );
+				exeProcessName = iter;
+			}
 		}
-	}
-	else
-	{
-		PrintToConsole( "Waiting for process: \"" << programCmdLineOptions.exeName.c_str() << "\" to start...\n" );
+		else
+		{
+			PrintToConsole( "Waiting for process: \"" << iter.c_str() << "\" to start...\n" );
+		}
 	}
 
 	runLoop.store(true);
@@ -99,15 +114,10 @@ int main( int argc , const char** argv )
 	while( runLoop.load() )
 	{
 		// If the process handle is null then lets see if we can get the PID of the process name.
-		// If the process name has a valid PID lets open the process handle so we can query whether it's running or not
+		// If the process name has a valid PID lets open the process handle so we can query whether it's running or not				
 		if( nullptr == exePocessHandle )
-		{
-			if( exePID = GetProcessID( programCmdLineOptions.exeName ) )
-			{
-				exePocessHandle = OpenProcess(SYNCHRONIZE, FALSE, exePID);
-				if(exePocessHandle) 
-					PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has started! Cursor is locked to the primary monitor.\n" );
-			}
+		{		
+			exeProcessName = SearchForRunningProcess(programCmdLineOptions.exeNames);
 		}
 			
 		// If the process handle is not null then lets see if the process is running.
@@ -134,7 +144,7 @@ int main( int argc , const char** argv )
 
 	if (exePocessHandle) 
 	{
-		PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\" has stopped! Cursor is unlocked.\n" );
+		PrintToConsole( "Process: \"" << exeProcessName.c_str() << "\" has stopped! Cursor is unlocked.\n" );
 		PrintToConsole( "\n" );
 
 		uint64_t total_ms = GetElapsedMilliseconds(startTime, GetTimeStamp());
@@ -148,7 +158,7 @@ int main( int argc , const char** argv )
 		const uint64_t ms = total_ms ;
 		total_ms -= ms;
 
-		PrintToConsole( "Process: \"" << programCmdLineOptions.exeName.c_str() << "\"" <<
+		PrintToConsole( "Process: \"" << exeProcessName.c_str() << "\"" <<
 			" was locked for: " << hours << " hours " << mins << " minutes "  <<
 			secs << " seconds and " << ms << " ms \n" 
 		);
