@@ -8,6 +8,7 @@ struct ProgramCmdLineOptions
 {
 	std::string exeName;
 	unsigned int msToSleep;
+	bool loadExeConfigs;
 
 	ProgramCmdLineOptions();
 };

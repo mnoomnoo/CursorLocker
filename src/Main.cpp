@@ -1,6 +1,7 @@
 
 #include <thread>
 #include <atomic>
+#include <fstream>
 
 #include "Common.h"
 #include "ProgramArgs.h"
@@ -64,7 +65,11 @@ int main( int argc , const char** argv )
 		return 1;
 	}
 
-	
+	std::ifstream istrm("exeConfigs");
+	if (!istrm.is_open())
+	{
+		
+	}
 
 	SetConsoleCtrlHandler(ConsoleHandler, TRUE);
 

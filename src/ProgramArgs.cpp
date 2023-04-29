@@ -13,6 +13,7 @@ constexpr const char* PROGRAM_HELP =
 ProgramCmdLineOptions::ProgramCmdLineOptions()
 {
 	msToSleep = 800;
+	loadExeConfigs = false;
 }
 
 bool DoesCommandArgsHaveHelpOption( std::vector<std::string>& cmdArgs )
