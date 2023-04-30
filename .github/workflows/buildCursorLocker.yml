@@ -25,7 +25,6 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}\build --config ${{env.BUILD_TYPE}}
 
-  deploy:
     - name: 'Create empty exesConfig file'
       run: type nul > ${{github.workspace}}\exesConfig.ecfg      
 
