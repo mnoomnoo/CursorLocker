@@ -26,7 +26,7 @@ jobs:
       run: cmake --build ${{github.workspace}}\build --config ${{env.BUILD_TYPE}}
 
     - name: 'Create empty exesConfig file'
-      run: fsutil file createnew ${{github.workspace}}\exesConfig.ecfg 0      
+      run: fsutil file createnew ${{github.workspace}}\build\exesConfig.ecfg 0      
 
     - name: 'Create release artifact'
       uses: actions/upload-artifact@v3
@@ -35,6 +35,6 @@ jobs:
         path: |
           build
           README.md
-          exesConfig.ecfg
+          build\exesConfig.ecfg
         retention-days: 1   
 
