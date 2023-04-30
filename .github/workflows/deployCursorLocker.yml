@@ -1,4 +1,4 @@
-name: Build and Deploy CursorLocker
+name: Deploy-CursorLocker
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
