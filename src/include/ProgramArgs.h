@@ -2,11 +2,11 @@
 #define PROGRAMARGS_H
 
 #include <string>
-
+#include <vector>
 
 struct ProgramCmdLineOptions
 {
-	std::string exeName;
+	std::vector<std::string> exeNames;
 	unsigned int msToSleep;
 
 	ProgramCmdLineOptions();
