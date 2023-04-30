@@ -1,48 +1,27 @@
 # CursorLocker
 
-I wrote this program after playing Rome Total War (2004) and Rome Total War Remastered (2021) on 
-a multi-monitor system. In the campaign and battle map when you attempt to move your mouse to the left 
-or right of the game screen to scroll the map, sometimes the cursor will go out of bounds of the primary monitor
-and show up on the Windows Desktop. If a click occurs while the cursor is out of bounds then Windows
-will interact with the click instead of RTW. This makes Windows minimize RTW and from my experience RTW doesn't
-like that very much. 
+This program locks the cursor to the the primary monitor when the specified executable starts running. Once the specified executable quits then the cursor is unlocked.
 
-This program fixes this by never allowing the cursor to escape the primary monitor when
-playing a specified game. Once the specified game quits then the cursor is unlocked.
+On multi-monitor systems the primary monitor shares a vertical or horizontal edge with another monitor. In some fullscreen applications its possible to move your mouse cursor outside the boundary of the primary monitor. If a click occurs while the cursor is outside the boundary of the primary monitor then Windows will sometimes interact with the click instead of the fullscreen application and cause the application to minimize or worse.
  
-## How to use
-```
-USAGE:
-	CursorLocker.exe -exe "<executable file>" [OPTIONS]
+## Usage:
+`CursorLocker.exe <executable_file.exe> [OPTIONS]`
 
-OPTIONS:
-	-exe "<executable file>"	Locks the cursor when this exe file becomes a process or is already a process
-	-h, -help					Print version and help info and exits
+## Options:	
+**-h, -help** - Print version and help info then exits  
+**-ec, -exesConfig** - Loads the exesConfigs.ecfg file which contains a list of executable files to search for. First exe in that list that becomes a process or is already a process triggers the cursor to lock to the primary monitor. Ignores the <executable_file.exe> passed in.  
+**-sleepTime \<milliseconds\>** - How long to sleep before a CursorLocker processing iteration. Default is 800 ms
 
-ADVANCED OPTIONS:
-	-sleepTime <milliseconds>	How long to sleep before a CursorLocker processing iteration. Default is 800
-```
+## Usage example:
+`CursorLocker.exe SomeFullscreenApplication.exe`
 
-## Usage example
-```
-CursorLocker.exe -exe "RomeTW.exe"
-```
-The above will start CursorLocker.exe and see if RomeTW.exe is currently a process. If it's currently a process then the cursor will be locked to the primary monitor.
-If RomeTW.exe isn't currently a process then CursorLocker.exe will wait to lock the cursor until RomeTW.exe is a process
+The above will start CursorLocker.exe and see if SomeFullscreenApplication.exe is currently a process. If it's currently a process then the cursor will immediately be locked to the primary monitor. If SomeFullscreenApplication.exe isn't currently a process then CursorLocker.exe will wait to lock the cursor until SomeFullscreenApplication.exe becomes a process
 
 ## How to compile and release
-Visual Studio 2019 is the IDE used for debug / release builds.
-1. Open the Solution file (.sln) in VS 2019
-2. Build | Batch Build...
-3. Check the Build checkbox for the debug and release configurations for the x64 platform
-4. Click Rebuild
-5. Go to the project directory and double click CreateReleaseFolder.bat
-6. CursorLockerRelease is now the program release folder. Zip and ship this folder
-
-## Behind the scenes
-This program uses [ClipCursor](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clipcursor?f1url=%3FappId%3DDev16IDEF1%26l%3DEN-US%26k%3Dk(WINUSER%252FClipCursor);k(ClipCursor);k(DevLang-C%252B%252B);k(TargetOS-Windows)%26rd%3Dtrue), [OpenWindowStation](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-openwindowstationa?redirectedfrom=MSDN&f1url=%3FappId%3DDev16IDEF1%26l%3DEN-US%26k%3Dk(WINUSER%252FOpenWindowStation);k(OpenWindowStation);k(DevLang-C%252B%252B);k(TargetOS-Windows)%26rd%3Dtrue) and [SetProcessWindowStation](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocesswindowstation)
-
-[OpenWindowStation](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-openwindowstationa?redirectedfrom=MSDN&f1url=%3FappId%3DDev16IDEF1%26l%3DEN-US%26k%3Dk(WINUSER%252FOpenWindowStation);k(OpenWindowStation);k(DevLang-C%252B%252B);k(TargetOS-Windows)%26rd%3Dtrue) and [SetProcessWindowStation](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocesswindowstation) are used because the CursorLocker process needs the WINSTA_WRITEATTRIBUTES access mask for the current Windows Station so that [ClipCursor](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clipcursor?f1url=%3FappId%3DDev16IDEF1%26l%3DEN-US%26k%3Dk(WINUSER%252FClipCursor);k(ClipCursor);k(DevLang-C%252B%252B);k(TargetOS-Windows)%26rd%3Dtrue) works.
+1. Run cmake to configure the project
+2. Build All
+3. Go to the project directory and double click CreateReleaseFolder.bat
+4. CursorLockerRelease is now the program release folder. Zip and ship this folder
 
 ## Thanks
 The CursorLocker icon is derived from an icon found on game-icons.net and made by Lorc, http://lorcblog.blogspot.com
