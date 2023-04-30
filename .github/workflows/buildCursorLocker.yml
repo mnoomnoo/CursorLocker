@@ -26,7 +26,7 @@ jobs:
       run: cmake --build ${{github.workspace}}\build --config ${{env.BUILD_TYPE}}
 
     - name: 'Create empty exesConfig file'
-      run: type . > ${{github.workspace}}\exesConfig.ecfg      
+      run: fsutil file createnew ${{github.workspace}}\exesConfig.ecfg 0      
 
     - name: 'Create release artifact'
       uses: actions/upload-artifact@v3
