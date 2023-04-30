@@ -461,4 +461,4 @@ _deps
 build
 TestFiles/
 .vscode
-BC_RELEASE/
+tools/CursorLockerRelease
