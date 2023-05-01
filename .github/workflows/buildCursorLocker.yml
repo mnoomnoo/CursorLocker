@@ -33,7 +33,7 @@ jobs:
       with:
         name: CursorLocker-Release
         path: |
-          build
+          build\Release\Release\CursorLocker.exe
           README.md
           build\exesConfig.ecfg
         retention-days: 1   
