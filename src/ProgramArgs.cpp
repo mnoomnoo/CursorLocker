@@ -70,7 +70,8 @@ bool ProcessProgramArgs(int argc , const char** argv, ProgramCmdLineOptions& pro
 
 		if(hasExeConfigs)
 		{		
-			const std::string exeConfPath = std::filesystem::current_path().string() + "\\" + "exesConfig.ecfg";
+			const std::filesystem::path exePath = argv[0];			
+			const std::string exeConfPath = exePath.parent_path().string() + "\\" + "exesConfig.ecfg";
 			std::ifstream file(exeConfPath);
 			if (file.is_open())
 			{
