@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <filesystem>
 #include <fstream>
 
 #include "Common.h"
@@ -68,8 +69,9 @@ bool ProcessProgramArgs(int argc , const char** argv, ProgramCmdLineOptions& pro
 		cmdArgs.pop_back();
 
 		if(hasExeConfigs)
-		{
-			std::ifstream file("exesConfig.ecfg");
+		{		
+			const std::string exeConfPath = std::filesystem::current_path().string() + "\\" + "exesConfig.ecfg";
+			std::ifstream file(exeConfPath);
 			if (file.is_open())
 			{
 				std::string line;
@@ -84,7 +86,7 @@ bool ProcessProgramArgs(int argc , const char** argv, ProgramCmdLineOptions& pro
 			}
 			else
 			{
-				PrintToConsole( "exesConfigs.ecfg not found\n" );
+				PrintToConsole( "exesConfig.ecfg not found\n" );
 				return false;
 			}
 		}
