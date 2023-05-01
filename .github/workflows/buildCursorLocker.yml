@@ -26,7 +26,10 @@ jobs:
       run: cmake --build ${{github.workspace}}\build --config ${{env.BUILD_TYPE}}
 
     - name: 'Create empty exesConfig file'
-      run: fsutil file createnew ${{github.workspace}}\build\exesConfig.ecfg 0      
+      run: fsutil file createnew ${{github.workspace}}\build\Release\Release\exesConfig.ecfg 0     
+
+    - name: 'Copy Readme.md to release folder'
+      run: copy README.md ${{github.workspace}}\build\Release\Release\README.md       
 
     - name: 'Create release artifact'
       uses: actions/upload-artifact@v3
@@ -34,7 +37,7 @@ jobs:
         name: CursorLocker-Release
         path: |
           build\Release\Release\CursorLocker.exe
-          README.md
-          build\exesConfig.ecfg
+          build\Release\Release\README.md
+          build\Release\Release\exesConfig.ecfg
         retention-days: 1   
 
