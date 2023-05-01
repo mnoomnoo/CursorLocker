@@ -64,6 +64,7 @@ std::string SearchForRunningProcess(const std::vector<std::string>& exeNames)
 			}
 		}	
 	}
+	return "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
