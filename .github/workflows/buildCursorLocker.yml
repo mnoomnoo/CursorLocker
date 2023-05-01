@@ -1,10 +1,6 @@
-name: CMake
+name: Build CursorLocker
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push, pull_request]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -29,7 +25,19 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}\build --config ${{env.BUILD_TYPE}}
 
-    - uses: actions/download-artifact@v3
+    - name: 'Create empty exesConfig file'
+      run: fsutil file createnew ${{github.workspace}}\build\Release\Release\exesConfig.ecfg 0     
+
+    - name: 'Copy Readme.md to release folder'
+      run: copy README.md ${{github.workspace}}\build\Release\Release\README.md       
+
+    - name: 'Create release artifact'
+      uses: actions/upload-artifact@v3
       with:
-        name: my-artifact
+        name: CursorLocker-Release
+        path: |
+          build\Release\Release\CursorLocker.exe
+          build\Release\Release\README.md
+          build\Release\Release\exesConfig.ecfg
+        retention-days: 1   
 
